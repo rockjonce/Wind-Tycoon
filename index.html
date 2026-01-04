@@ -57,6 +57,22 @@
         height: var(--app-height);
       }
     }
+/* ✅ iPhone / iOS iframe：避免外層產生多餘捲動或露白 */
+.frame-wrap {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: var(--app-height);
+}
+
+/* iOS 某些版本會對 iframe width/height 取整怪怪的：用 min-* 保底 */
+iframe {
+  width: 1px;
+  min-width: 100%;
+  height: 1px;
+  min-height: 100%;
+}
+  
   </style>
 </head>
 
