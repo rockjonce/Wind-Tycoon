@@ -1,28 +1,90 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wind Tycoon 風能大亨</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden; /* 隱藏外部捲軸 */
-        }
-        iframe {
-            border: none;
-            width: 100%;
-            height: 100%;
-            display: block; /* 移除 iframe 底部可能的間隙 */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Wind Tycoon 風能大亨</title>
+
+  <style>
+    :root{
+      --app-height: 100vh; /* fallback */
+    }
+
+    /* 新式行動瀏覽器：用動態視窗高度避免網址列造成露白 */
+    @supports (height: 100dvh) {
+      :root { --app-height: 100dvh; }
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: var(--app-height);
+      overflow: hidden;              /* 外層不捲動 */
+      overscroll-behavior: none;     /* 避免 iOS/Android 外層彈跳 */
+      background: #000;              /* iframe 載入前不會白邊閃爍 */
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* 讓 iframe 真正滿版 */
+    .frame-wrap {
+      width: 100%;
+      height: var(--app-height);
+      overflow: hidden;
+    }
+
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+    }
+
+    /* 手機橫放最佳化（大多數手機橫放高度較矮，這裡確保滿版且穩定） */
+    @media (max-width: 932px) and (orientation: landscape) {
+      html, body, .frame-wrap {
+        height: var(--app-height);
+      }
+      iframe {
+        height: 100%;
+      }
+    }
+
+    /* iPad / 平板：保持滿版（可依需求再加上最大寬度等設定） */
+    @media (min-width: 768px) {
+      .frame-wrap {
+        height: var(--app-height);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">
-        您的瀏覽器不支援 iframe，請直接訪問 <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">這裡</a>。
+  <div class="frame-wrap">
+    <iframe
+      title="Wind Tycoon 風能大亨"
+      loading="eager"
+      referrerpolicy="no-referrer-when-downgrade"
+      allow="fullscreen"
+      src="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec"
+    >
+      您的瀏覽器不支援 iframe，請直接訪問
+      <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">這裡</a>。
     </iframe>
+  </div>
+
+  <script>
+    // 某些 iOS/Safari 情境下，dvh支援/計算仍可能不穩
+    // 用 JS 再補一層「真實可視高度」保險：把可視高度寫到 CSS 變數
+    (function () {
+      const setAppHeight = () => {
+        document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
+      };
+      setAppHeight();
+      window.addEventListener('resize', setAppHeight, { passive: true });
+      window.addEventListener('orientationchange', setAppHeight, { passive: true });
+    })();
+  </script>
 </body>
 </html>
