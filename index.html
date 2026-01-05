@@ -75,122 +75,120 @@
     }
 
     /* =========================
-       ✅ Glassmorphism Language Menu
+       ✅ Glassmorphism Language Menu (Start-only)
        ========================= */
-    .lang-menu {
+    .lang-gate {
       position: fixed;
-      top: calc(12px + env(safe-area-inset-top));
-      right: calc(12px + env(safe-area-inset-right));
+      inset: 0;
       z-index: 99999;
       display: flex;
+      justify-content: center;
       align-items: center;
-      gap: 10px;
 
-      padding: 10px 12px;
-      border-radius: 16px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
 
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .lang-card {
+      width: min(420px, 92vw);
+      border-radius: 22px;
+      padding: 18px 18px 16px;
 
-      box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.22);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45), 0 0 40px rgba(0,229,255,0.14);
       color: rgba(255,255,255,0.92);
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       user-select: none;
+      text-align: center;
     }
 
-    .lang-badge {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: rgba(0, 229, 255, 0.16);
-      border: 1px solid rgba(0, 229, 255, 0.28);
-      box-shadow: inset 0 0 18px rgba(0, 229, 255, 0.10);
-      font-size: 16px;
+    .lang-title {
+      font-weight: 1000;
+      font-size: 18px;
+      letter-spacing: 0.4px;
+      margin: 6px 0 14px;
     }
 
-    .lang-select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
+    .lang-sub {
+      font-size: 12px;
+      font-weight: 900;
+      opacity: 0.85;
+      margin-bottom: 14px;
+    }
 
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      background: rgba(0, 0, 0, 0.18);
+    .lang-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .lang-btn {
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.12);
       color: rgba(255,255,255,0.95);
 
-      padding: 10px 38px 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-      font-size: 14px;
-      letter-spacing: 0.2px;
-      outline: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 1000;
+      font-size: 15px;
       cursor: pointer;
 
-      box-shadow: 0 10px 26px rgba(0,0,0,0.25);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      min-width: 150px;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease;
     }
 
-    .lang-select:focus {
-      border-color: rgba(0, 229, 255, 0.65);
-      box-shadow: 0 14px 34px rgba(0,229,255,0.18), 0 10px 26px rgba(0,0,0,0.25);
+    .lang-btn:hover { transform: translateY(-1px); }
+    .lang-btn:active { transform: translateY(6px); box-shadow: none; }
+
+    .lang-btn.zh {
+      border-color: rgba(0,229,255,0.35);
+      background: rgba(0,229,255,0.16);
     }
 
-    .lang-menu:hover .lang-select {
-      transform: translateY(-1px);
+    .lang-btn.en {
+      border-color: rgba(100,255,218,0.35);
+      background: rgba(100,255,218,0.14);
     }
 
-    .lang-menu:active .lang-select {
-      transform: translateY(1px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-    }
-
-    .lang-caret {
-      position: absolute;
-      right: calc(12px + env(safe-area-inset-right) + 12px + 12px);
-      top: calc(12px + env(safe-area-inset-top) + 10px + 10px);
-      z-index: 100000;
-      width: 0;
-      height: 0;
-      pointer-events: none;
-
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 8px solid rgba(255,255,255,0.85);
-      opacity: 0.75;
-    }
-
-    /* 小螢幕：別太搶戲 */
     @media (max-width: 420px) {
-      .lang-menu { padding: 8px 10px; border-radius: 14px; }
-      .lang-badge { width: 32px; height: 32px; border-radius: 11px; }
-      .lang-select { padding: 9px 36px 9px 10px; font-size: 13px; }
-      .lang-caret { border-left-width: 5px; border-right-width: 5px; border-top-width: 7px; }
+      .lang-btn { min-width: 140px; font-size: 14px; }
+      .lang-title { font-size: 17px; }
     }
+
+    /* 一開始不顯示 iframe，等選語言後才顯示 */
+    .frame-wrap { display: none; }
   </style>
 </head>
 
 <body>
-  <!-- ✅ 玻璃擬態語言選單 -->
-  <div class="lang-menu" aria-label="Language Menu">
-    <div class="lang-badge" aria-hidden="true">🌐</div>
-    <select id="langSel" class="lang-select" aria-label="Select language">
-      <option value="zh">中文</option>
-      <option value="en">English</option>
-    </select>
+  <!-- ✅ 進入前語言選單（選定後消失） -->
+  <div id="langGate" class="lang-gate" aria-label="Language Gate">
+    <div class="lang-card">
+      <div class="lang-title">🌐 請選擇語言 / Choose Language</div>
+      <div class="lang-sub">選定後將直接進入遊戲</div>
+      <div class="lang-row">
+        <button id="btnZh" class="lang-btn zh" type="button">中文</button>
+        <button id="btnEn" class="lang-btn en" type="button">English</button>
+      </div>
+    </div>
   </div>
-  <div class="lang-caret" aria-hidden="true"></div>
 
-  <div class="frame-wrap">
+  <div id="frameWrap" class="frame-wrap">
     <iframe
       id="gameFrame"
       title="Wind Tycoon 風能大亨"
       loading="eager"
       referrerpolicy="no-referrer-when-downgrade"
       allow="fullscreen"
-      src="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec"
+      src="about:blank"
     >
       您的瀏覽器不支援 iframe，請直接訪問
       <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">這裡</a>。
@@ -209,16 +207,18 @@
       window.addEventListener('orientationchange', setAppHeight, { passive: true });
     })();
 
-    // ✅ Language switching (iframe src)
+    // ✅ Start-only language gate: pick once, then hide gate forever (no menu in-game)
     (function () {
       const URL_ZH = "https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec";
       const URL_EN = "https://script.google.com/macros/s/AKfycbwVTeiQ5Tka3mVQAPJf9kBTLnwT7bHmedTY1YHGJtDx0MUblSzQExaE0RZTpf_1_arMAw/exec";
 
-      const sel = document.getElementById("langSel");
+      const gate = document.getElementById("langGate");
+      const frameWrap = document.getElementById("frameWrap");
       const frame = document.getElementById("gameFrame");
 
-      const applyLang = (lang) => {
-        if (!frame) return;
+      const enter = (lang) => {
+        if (!frame || !gate || !frameWrap) return;
+
         if (lang === "en") {
           frame.src = URL_EN;
           frame.title = "Wind Tycoon (English)";
@@ -230,22 +230,19 @@
           document.documentElement.lang = "zh-TW";
           document.title = "Wind Tycoon 風能大亨";
         }
+
+        // 顯示遊戲、隱藏選單（之後不再出現）
+        frameWrap.style.display = "block";
+        gate.style.display = "none";
       };
 
-      // 預設中文
-      if (sel) sel.value = "zh";
+      const bZh = document.getElementById("btnZh");
+      const bEn = document.getElementById("btnEn");
 
-      // 切換
-      if (sel) {
-        sel.addEventListener("change", () => {
-          applyLang(sel.value);
-        });
-      }
+      if (bZh) bZh.addEventListener("click", () => enter("zh"));
+      if (bEn) bEn.addEventListener("click", () => enter("en"));
     })();
   </script>
 </body>
 </html>
 
-
-</html>
-```
