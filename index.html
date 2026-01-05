@@ -9,8 +9,6 @@
     :root{
       --app-height: 100vh; /* fallback */
     }
-
-    /* 新式行動瀏覽器：用動態視窗高度避免網址列造成露白 */
     @supports (height: 100dvh) {
       :root { --app-height: 100dvh; }
     }
@@ -20,10 +18,16 @@
       padding: 0;
       width: 100%;
       height: var(--app-height);
-      overflow: hidden;              /* 外層不捲動 */
-      overscroll-behavior: none;     /* 避免 iOS/Android 外層彈跳 */
-      background: #000;              /* iframe 載入前不會白邊閃爍 */
+      overflow: hidden;
+      overscroll-behavior: none;
       -webkit-text-size-adjust: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+      /* ✅ 背景顏色：比照附圖的深藍綠漸層 */
+      background:
+        radial-gradient(1200px 800px at 20% 10%, rgba(0, 229, 255, 0.18), transparent 55%),
+        radial-gradient(900px 700px at 80% 20%, rgba(100, 255, 218, 0.14), transparent 55%),
+        linear-gradient(135deg, #061528 0%, #0b2a44 45%, #071b2f 100%);
     }
 
     /* 讓 iframe 真正滿版 */
@@ -31,51 +35,23 @@
       width: 100%;
       height: var(--app-height);
       overflow: hidden;
+      position: fixed;
+      inset: 0;
+      display: none; /* ✅ 一開始不顯示，選語言後才顯示 */
     }
 
     iframe {
       border: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      background: #000;
-    }
-
-    /* 手機橫放最佳化（大多數手機橫放高度較矮，這裡確保滿版且穩定） */
-    @media (max-width: 932px) and (orientation: landscape) {
-      html, body, .frame-wrap {
-        height: var(--app-height);
-      }
-      iframe {
-        height: 100%;
-      }
-    }
-
-    /* iPad / 平板：保持滿版（可依需求再加上最大寬度等設定） */
-    @media (min-width: 768px) {
-      .frame-wrap {
-        height: var(--app-height);
-      }
-    }
-
-    /* ✅ iPhone / iOS iframe：避免外層產生多餘捲動或露白 */
-    .frame-wrap {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: var(--app-height);
-    }
-
-    /* iOS 某些版本會對 iframe width/height 取整怪怪的：用 min-* 保底 */
-    iframe {
       width: 1px;
       min-width: 100%;
       height: 1px;
       min-height: 100%;
+      display: block;
+      background: #000;
     }
 
     /* =========================
-       ✅ Glassmorphism Language Menu (Start-only)
+       ✅ 首頁：Language Gate + Banner
        ========================= */
     .lang-gate {
       position: fixed;
@@ -85,45 +61,117 @@
       justify-content: center;
       align-items: center;
 
-      background: rgba(0,0,0,0.55);
+      background: rgba(0,0,0,0.35);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
+      padding: calc(14px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right))
+               calc(14px + env(safe-area-inset-bottom)) calc(14px + env(safe-area-inset-left));
+      box-sizing: border-box;
     }
 
     .lang-card {
-      width: min(420px, 92vw);
-      border-radius: 22px;
-      padding: 18px 18px 16px;
+      width: min(980px, 94vw);
+      border-radius: 30px;
+      overflow: hidden;
 
+      /* ✅ 玻璃擬態 */
       background: rgba(255,255,255,0.14);
       border: 1px solid rgba(255,255,255,0.22);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
 
-      box-shadow: 0 30px 90px rgba(0,0,0,0.45), 0 0 40px rgba(0,229,255,0.14);
+      box-shadow: 0 30px 90px rgba(0,0,0,0.45), 0 0 40px rgba(0,229,255,0.12);
       color: rgba(255,255,255,0.92);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      user-select: none;
-      text-align: center;
     }
 
-    .lang-title {
+    .lang-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+      min-height: 360px;
+    }
+
+    /* 左側：Banner + Brand */
+    .brand-pane {
+      padding: 26px 26px 20px;
+      background:
+        radial-gradient(520px 320px at 30% 20%, rgba(0, 229, 255, 0.18), transparent 55%),
+        radial-gradient(520px 320px at 70% 35%, rgba(100, 255, 218, 0.12), transparent 55%),
+        rgba(255,255,255,0.06);
+      border-right: 1px solid rgba(255,255,255,0.14);
+    }
+
+    .banner {
+      width: 100%;
+      height: 140px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0,229,255,0.20);
+      box-shadow: inset 0 0 28px rgba(0,0,0,0.10), 0 14px 40px rgba(0,0,0,0.18);
+      background: rgba(255,255,255,0.10);
+    }
+    .banner img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-title {
+      margin: 18px 0 8px;
+      font-weight: 1000;
+      line-height: 1.05;
+      letter-spacing: 0.4px;
+      font-size: 44px;
+      color: rgba(255,255,255,0.94);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
+    .brand-title .zh {
+      display: block;
+      font-size: 28px;
+      letter-spacing: 2px;
+      margin-top: 8px;
+      color: rgba(0,229,255,0.95);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.22);
+    }
+    .brand-sub {
+      font-size: 14px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.85);
+      opacity: 0.95;
+    }
+
+    /* 右側：選語言 */
+    .pick-pane {
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .pick-title {
       font-weight: 1000;
       font-size: 18px;
       letter-spacing: 0.4px;
-      margin: 6px 0 14px;
+      margin: 0 0 10px;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 2px 14px rgba(0,0,0,0.28);
     }
 
-    .lang-sub {
+    .pick-sub {
       font-size: 12px;
       font-weight: 900;
       opacity: 0.85;
-      margin-bottom: 14px;
+      margin: 0 0 18px;
+      color: rgba(255,255,255,0.88);
     }
 
     .lang-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
@@ -134,70 +182,119 @@
       background: rgba(255,255,255,0.12);
       color: rgba(255,255,255,0.95);
 
-      padding: 12px 14px;
+      padding: 14px 16px;
       border-radius: 14px;
       font-weight: 1000;
-      font-size: 15px;
+      font-size: 16px;
       cursor: pointer;
 
-      min-width: 150px;
-      box-shadow: 0 8px 0 rgba(0,0,0,0.25);
+      min-width: 160px;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.25);
       transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease;
     }
-
     .lang-btn:hover { transform: translateY(-1px); }
-    .lang-btn:active { transform: translateY(6px); box-shadow: none; }
+    .lang-btn:active { transform: translateY(8px); box-shadow: none; }
 
     .lang-btn.zh {
       border-color: rgba(0,229,255,0.35);
       background: rgba(0,229,255,0.16);
     }
-
     .lang-btn.en {
       border-color: rgba(100,255,218,0.35);
       background: rgba(100,255,218,0.14);
     }
 
+    /* RWD：小螢幕改直式 */
+    @media (max-width: 880px) {
+      .lang-inner { grid-template-columns: 1fr; }
+      .brand-pane { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.14); }
+      .brand-title { font-size: 38px; }
+      .brand-title .zh { font-size: 24px; }
+      .banner { height: 120px; }
+    }
     @media (max-width: 420px) {
-      .lang-btn { min-width: 140px; font-size: 14px; }
-      .lang-title { font-size: 17px; }
+      .lang-btn { min-width: 145px; font-size: 15px; padding: 13px 14px; }
+      .brand-title { font-size: 34px; }
+      .brand-title .zh { font-size: 22px; }
     }
 
-    /* 一開始不顯示 iframe，等選語言後才顯示 */
-    .frame-wrap { display: none; }
+    /* =========================
+       ✅ Footer 版權資訊
+       ========================= */
+    .page-footer {
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      z-index: 100000;
+
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.78);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      letter-spacing: 0.3px;
+      text-align: center;
+      padding: 0 12px;
+      width: 100%;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
   </style>
 </head>
 
 <body>
-  <!-- ✅ 進入前語言選單（選定後消失） -->
+  <!-- ✅ 首頁：橫幅 + 語言選擇 -->
   <div id="langGate" class="lang-gate" aria-label="Language Gate">
     <div class="lang-card">
-      <div class="lang-title">🌐 請選擇語言 / Choose Language</div>
-      <div class="lang-sub">選定後將直接進入登入畫面</div>
-      <div class="lang-row">
-        <button id="btnZh" class="lang-btn zh" type="button">中文</button>
-        <button id="btnEn" class="lang-btn en" type="button">English</button>
+      <div class="lang-inner">
+        <div class="brand-pane">
+          <!-- ✅ 橫幅圖片（Google Drive 轉直連） -->
+          <div class="banner">
+            <img
+              alt="Wind Tycoon Banner"
+              src="https://drive.google.com/uc?export=view&id=1-gKOWdzrHjxQjX2R2B4_WtNJdc1TBe_o"
+            />
+          </div>
+
+          <div class="brand-title">
+            Wind Tycoon
+            <span class="zh">風力大亨</span>
+          </div>
+          <div class="brand-sub">科技能源版 · Smart Grid</div>
+        </div>
+
+        <div class="pick-pane">
+          <div class="pick-title">🌐 請選擇語言 / Choose Language</div>
+          <div class="pick-sub">選定後直接進入登入畫面</div>
+
+          <div class="lang-row">
+            <button id="btnZh" class="lang-btn zh" type="button">中文</button>
+            <button id="btnEn" class="lang-btn en" type="button">English</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- ✅ 遊戲 iframe（選語言後才顯示） -->
   <div id="frameWrap" class="frame-wrap">
     <iframe
       id="gameFrame"
-      title="Wind Tycoon 風能大亨"
+      title="Wind Tycoon"
       loading="eager"
       referrerpolicy="no-referrer-when-downgrade"
       allow="fullscreen"
       src="about:blank"
     >
-      您的瀏覽器不支援 iframe，請直接訪問
-      <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">這裡</a>。
+      Your browser does not support iframe. Please open:
+      <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">here</a>.
     </iframe>
   </div>
 
+  <!-- ✅ 版權資訊（底部） -->
+  <div class="page-footer">CopyRight 2025@Tommy Yang(rockjonce@gmail.com)</div>
+
   <script>
-    // 某些 iOS/Safari 情境下，dvh支援/計算仍可能不穩
-    // 用 JS 再補一層「真實可視高度」保險：把可視高度寫到 CSS 變數
+    // iOS/Safari：用 JS 補強「真實可視高度」
     (function () {
       const setAppHeight = () => {
         document.documentElement.style.setProperty('--app-height', window.innerHeight + 'px');
@@ -207,7 +304,7 @@
       window.addEventListener('orientationchange', setAppHeight, { passive: true });
     })();
 
-    // ✅ Language gate: choose once -> show iframe (login screen inside) and hide gate
+    // ✅ 語言選擇：選一次 -> 隱藏選單 -> 顯示登入（iframe）
     (function () {
       const URL_ZH = "https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec";
       const URL_EN = "https://script.google.com/macros/s/AKfycbwVTeiQ5Tka3mVQAPJf9kBTLnwT7bHmedTY1YHGJtDx0MUblSzQExaE0RZTpf_1_arMAw/exec";
@@ -217,9 +314,9 @@
       const frame = document.getElementById("gameFrame");
 
       const enter = (lang) => {
-        if (!frame || !gate || !frameWrap) return;
+        if (!gate || !frameWrap || !frame) return;
 
-        // ✅ 先顯示 iframe（避免某些瀏覽器先換 src 再顯示會閃一下）
+        // 先顯示 iframe（避免某些瀏覽器切 src 造成閃爍）
         frameWrap.style.display = "block";
 
         if (lang === "en") {
@@ -234,7 +331,7 @@
           document.title = "Wind Tycoon 風能大亨";
         }
 
-        // ✅ 隱藏語言選單（之後不再出現）
+        // 隱藏語言頁
         gate.style.display = "none";
       };
 
@@ -247,4 +344,3 @@
   </script>
 </body>
 </html>
-
