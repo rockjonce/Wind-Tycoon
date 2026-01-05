@@ -173,7 +173,7 @@
   <div id="langGate" class="lang-gate" aria-label="Language Gate">
     <div class="lang-card">
       <div class="lang-title">🌐 請選擇語言 / Choose Language</div>
-      <div class="lang-sub">選定後將直接進入遊戲</div>
+      <div class="lang-sub">選定後將直接進入登入畫面</div>
       <div class="lang-row">
         <button id="btnZh" class="lang-btn zh" type="button">中文</button>
         <button id="btnEn" class="lang-btn en" type="button">English</button>
@@ -207,7 +207,7 @@
       window.addEventListener('orientationchange', setAppHeight, { passive: true });
     })();
 
-    // ✅ Start-only language gate: pick once, then hide gate forever (no menu in-game)
+    // ✅ Language gate: choose once -> show iframe (login screen inside) and hide gate
     (function () {
       const URL_ZH = "https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec";
       const URL_EN = "https://script.google.com/macros/s/AKfycbwVTeiQ5Tka3mVQAPJf9kBTLnwT7bHmedTY1YHGJtDx0MUblSzQExaE0RZTpf_1_arMAw/exec";
@@ -218,6 +218,9 @@
 
       const enter = (lang) => {
         if (!frame || !gate || !frameWrap) return;
+
+        // ✅ 先顯示 iframe（避免某些瀏覽器先換 src 再顯示會閃一下）
+        frameWrap.style.display = "block";
 
         if (lang === "en") {
           frame.src = URL_EN;
@@ -231,8 +234,7 @@
           document.title = "Wind Tycoon 風能大亨";
         }
 
-        // 顯示遊戲、隱藏選單（之後不再出現）
-        frameWrap.style.display = "block";
+        // ✅ 隱藏語言選單（之後不再出現）
         gate.style.display = "none";
       };
 
