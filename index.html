@@ -230,7 +230,6 @@
       <div class="lang-inner">
         <div class="brand-pane">
           <div class="banner">
-            <!-- ✅ 這裡改成「多來源候補」+ onerror 自動切換 -->
             <img
               id="bannerImg"
               alt="Wind Tycoon Banner"
@@ -273,7 +272,8 @@
     </iframe>
   </div>
 
-  <div class="page-footer">CopyRight 2025@Tommy Yang(rockjonce@gmail.com)</div>
+  <!-- ✅ 加上 id，等進入登入頁後隱藏 -->
+  <div id="pageFooter" class="page-footer">CopyRight 2025@Tommy Yang(rockjonce@gmail.com)</div>
 
   <script>
     // iOS/Safari：用 JS 補強「真實可視高度」
@@ -286,15 +286,12 @@
       window.addEventListener('orientationchange', setAppHeight, { passive: true });
     })();
 
-    // ✅ Banner：Google Drive 直連常不穩，用多個候補 + 失敗自動換
+    // ✅ Banner：多個候補 + 失敗自動換
     (function () {
       const FILE_ID = "1-gKOWdzrHjxQjX2R2B4_WtNJdc1TBe_o";
       const sources = [
-        // 1) 最常穩的：googleusercontent
         `https://lh3.googleusercontent.com/d/${FILE_ID}=w1600`,
-        // 2) thumbnail 也很常可用
         `https://drive.google.com/thumbnail?id=${FILE_ID}&sz=w1600`,
-        // 3) uc 下載直連（有時候會觸發下載/重導）
         `https://drive.google.com/uc?export=download&id=${FILE_ID}`
       ];
 
@@ -303,7 +300,7 @@
 
       let idx = 0;
       const tryNext = () => {
-        if (idx >= sources.length) return; // 全掛就算了（至少不會無限迴圈）
+        if (idx >= sources.length) return;
         img.src = sources[idx++];
       };
 
@@ -311,7 +308,7 @@
       tryNext();
     })();
 
-    // ✅ 語言選擇：選一次 -> 隱藏選單 -> 顯示登入（iframe）
+    // ✅ 語言選擇：選一次 -> 隱藏選單 + 隱藏版權 -> 顯示登入（iframe）
     (function () {
       const URL_ZH = "https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec";
       const URL_EN = "https://script.google.com/macros/s/AKfycbwVTeiQ5Tka3mVQAPJf9kBTLnwT7bHmedTY1YHGJtDx0MUblSzQExaE0RZTpf_1_arMAw/exec";
@@ -319,6 +316,7 @@
       const gate = document.getElementById("langGate");
       const frameWrap = document.getElementById("frameWrap");
       const frame = document.getElementById("gameFrame");
+      const footer = document.getElementById("pageFooter");
 
       const enter = (lang) => {
         if (!gate || !frameWrap || !frame) return;
@@ -337,7 +335,9 @@
           document.title = "Wind Tycoon 風能大亨";
         }
 
+        // ✅ 進入登入後：隱藏語言頁 + 隱藏版權
         gate.style.display = "none";
+        if (footer) footer.style.display = "none";
       };
 
       const bZh = document.getElementById("btnZh");
