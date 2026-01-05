@@ -6,14 +6,10 @@
   <title>Wind Tycoon 風能大亨</title>
 
   <style>
-    :root{
-      --app-height: 100vh; /* fallback */
-    }
-    @supports (height: 100dvh) {
-      :root { --app-height: 100dvh; }
-    }
+    :root{ --app-height: 100vh; }
+    @supports (height: 100dvh) { :root { --app-height: 100dvh; } }
 
-    html, body {
+    html, body{
       margin: 0;
       padding: 0;
       width: 100%;
@@ -23,24 +19,22 @@
       -webkit-text-size-adjust: 100%;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-      /* ✅ 背景顏色：比照附圖的深藍綠漸層 */
       background:
         radial-gradient(1200px 800px at 20% 10%, rgba(0, 229, 255, 0.18), transparent 55%),
         radial-gradient(900px 700px at 80% 20%, rgba(100, 255, 218, 0.14), transparent 55%),
         linear-gradient(135deg, #061528 0%, #0b2a44 45%, #071b2f 100%);
     }
 
-    /* 讓 iframe 真正滿版 */
-    .frame-wrap {
+    .frame-wrap{
       width: 100%;
       height: var(--app-height);
       overflow: hidden;
       position: fixed;
       inset: 0;
-      display: none; /* ✅ 一開始不顯示，選語言後才顯示 */
+      display: none;
     }
 
-    iframe {
+    iframe{
       border: 0;
       width: 1px;
       min-width: 100%;
@@ -50,10 +44,7 @@
       background: #000;
     }
 
-    /* =========================
-       ✅ 首頁：Language Gate + Banner
-       ========================= */
-    .lang-gate {
+    .lang-gate{
       position: fixed;
       inset: 0;
       z-index: 99999;
@@ -69,31 +60,26 @@
       box-sizing: border-box;
     }
 
-    .lang-card {
+    .lang-card{
       width: min(980px, 94vw);
       border-radius: 30px;
       overflow: hidden;
-
-      /* ✅ 玻璃擬態 */
       background: rgba(255,255,255,0.14);
       border: 1px solid rgba(255,255,255,0.22);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-
       box-shadow: 0 30px 90px rgba(0,0,0,0.45), 0 0 40px rgba(0,229,255,0.12);
       color: rgba(255,255,255,0.92);
     }
 
-    .lang-inner {
+    .lang-inner{
       display: grid;
       grid-template-columns: 1.1fr 1fr;
-      gap: 0;
       align-items: stretch;
       min-height: 360px;
     }
 
-    /* 左側：Banner + Brand */
-    .brand-pane {
+    .brand-pane{
       padding: 26px 26px 20px;
       background:
         radial-gradient(520px 320px at 30% 20%, rgba(0, 229, 255, 0.18), transparent 55%),
@@ -102,7 +88,7 @@
       border-right: 1px solid rgba(255,255,255,0.14);
     }
 
-    .banner {
+    .banner{
       width: 100%;
       height: 140px;
       border-radius: 18px;
@@ -110,7 +96,10 @@
       border: 1px solid rgba(0,229,255,0.20);
       box-shadow: inset 0 0 28px rgba(0,0,0,0.10), 0 14px 40px rgba(0,0,0,0.18);
       background: rgba(255,255,255,0.10);
+      display: grid;
+      place-items: center;
     }
+
     .banner img{
       width: 100%;
       height: 100%;
@@ -118,7 +107,7 @@
       display: block;
     }
 
-    .brand-title {
+    .brand-title{
       margin: 18px 0 8px;
       font-weight: 1000;
       line-height: 1.05;
@@ -127,7 +116,8 @@
       color: rgba(255,255,255,0.94);
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
     }
-    .brand-title .zh {
+
+    .brand-title .zh{
       display: block;
       font-size: 28px;
       letter-spacing: 2px;
@@ -135,15 +125,15 @@
       color: rgba(0,229,255,0.95);
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.22);
     }
-    .brand-sub {
+
+    .brand-sub{
       font-size: 14px;
       font-weight: 900;
       color: rgba(255,255,255,0.85);
       opacity: 0.95;
     }
 
-    /* 右側：選語言 */
-    .pick-pane {
+    .pick-pane{
       padding: 28px 26px;
       display: flex;
       flex-direction: column;
@@ -152,7 +142,7 @@
       background: rgba(255,255,255,0.06);
     }
 
-    .pick-title {
+    .pick-title{
       font-weight: 1000;
       font-size: 18px;
       letter-spacing: 0.4px;
@@ -161,7 +151,7 @@
       text-shadow: 0 2px 14px rgba(0,0,0,0.28);
     }
 
-    .pick-sub {
+    .pick-sub{
       font-size: 12px;
       font-weight: 900;
       opacity: 0.85;
@@ -169,7 +159,7 @@
       color: rgba(255,255,255,0.88);
     }
 
-    .lang-row {
+    .lang-row{
       display: flex;
       gap: 12px;
       justify-content: center;
@@ -177,57 +167,50 @@
       flex-wrap: wrap;
     }
 
-    .lang-btn {
+    .lang-btn{
       border: 1px solid rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.12);
       color: rgba(255,255,255,0.95);
-
       padding: 14px 16px;
       border-radius: 14px;
       font-weight: 1000;
       font-size: 16px;
       cursor: pointer;
-
       min-width: 160px;
       box-shadow: 0 10px 0 rgba(0,0,0,0.25);
       transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, background 0.12s ease;
     }
-    .lang-btn:hover { transform: translateY(-1px); }
-    .lang-btn:active { transform: translateY(8px); box-shadow: none; }
+    .lang-btn:hover{ transform: translateY(-1px); }
+    .lang-btn:active{ transform: translateY(8px); box-shadow: none; }
 
-    .lang-btn.zh {
+    .lang-btn.zh{
       border-color: rgba(0,229,255,0.35);
       background: rgba(0,229,255,0.16);
     }
-    .lang-btn.en {
+    .lang-btn.en{
       border-color: rgba(100,255,218,0.35);
       background: rgba(100,255,218,0.14);
     }
 
-    /* RWD：小螢幕改直式 */
-    @media (max-width: 880px) {
-      .lang-inner { grid-template-columns: 1fr; }
-      .brand-pane { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.14); }
-      .brand-title { font-size: 38px; }
-      .brand-title .zh { font-size: 24px; }
-      .banner { height: 120px; }
+    @media (max-width: 880px){
+      .lang-inner{ grid-template-columns: 1fr; }
+      .brand-pane{ border-right: none; border-bottom: 1px solid rgba(255,255,255,0.14); }
+      .brand-title{ font-size: 38px; }
+      .brand-title .zh{ font-size: 24px; }
+      .banner{ height: 120px; }
     }
-    @media (max-width: 420px) {
-      .lang-btn { min-width: 145px; font-size: 15px; padding: 13px 14px; }
-      .brand-title { font-size: 34px; }
-      .brand-title .zh { font-size: 22px; }
+    @media (max-width: 420px){
+      .lang-btn{ min-width: 145px; font-size: 15px; padding: 13px 14px; }
+      .brand-title{ font-size: 34px; }
+      .brand-title .zh{ font-size: 22px; }
     }
 
-    /* =========================
-       ✅ Footer 版權資訊
-       ========================= */
-    .page-footer {
+    .page-footer{
       position: fixed;
       left: 50%;
       bottom: 10px;
       transform: translateX(-50%);
       z-index: 100000;
-
       font-size: 12px;
       color: rgba(255, 255, 255, 0.78);
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
@@ -242,16 +225,18 @@
 </head>
 
 <body>
-  <!-- ✅ 首頁：橫幅 + 語言選擇 -->
   <div id="langGate" class="lang-gate" aria-label="Language Gate">
     <div class="lang-card">
       <div class="lang-inner">
         <div class="brand-pane">
-          <!-- ✅ 橫幅圖片（Google Drive 轉直連） -->
           <div class="banner">
+            <!-- ✅ 這裡改成「多來源候補」+ onerror 自動切換 -->
             <img
+              id="bannerImg"
               alt="Wind Tycoon Banner"
-              src="https://drive.google.com/uc?export=view&id=1-gKOWdzrHjxQjX2R2B4_WtNJdc1TBe_o"
+              referrerpolicy="no-referrer"
+              loading="eager"
+              decoding="async"
             />
           </div>
 
@@ -275,7 +260,6 @@
     </div>
   </div>
 
-  <!-- ✅ 遊戲 iframe（選語言後才顯示） -->
   <div id="frameWrap" class="frame-wrap">
     <iframe
       id="gameFrame"
@@ -285,12 +269,10 @@
       allow="fullscreen"
       src="about:blank"
     >
-      Your browser does not support iframe. Please open:
-      <a href="https://script.google.com/macros/s/AKfycbxt5eJxnhQaHUyQocKHg9meP5YmGRJc6YmIXn4pXPPcMRw7fxEXaOnBjoNiR52xu-FJyQ/exec">here</a>.
+      Your browser does not support iframe.
     </iframe>
   </div>
 
-  <!-- ✅ 版權資訊（底部） -->
   <div class="page-footer">CopyRight 2025@Tommy Yang(rockjonce@gmail.com)</div>
 
   <script>
@@ -302,6 +284,31 @@
       setAppHeight();
       window.addEventListener('resize', setAppHeight, { passive: true });
       window.addEventListener('orientationchange', setAppHeight, { passive: true });
+    })();
+
+    // ✅ Banner：Google Drive 直連常不穩，用多個候補 + 失敗自動換
+    (function () {
+      const FILE_ID = "1-gKOWdzrHjxQjX2R2B4_WtNJdc1TBe_o";
+      const sources = [
+        // 1) 最常穩的：googleusercontent
+        `https://lh3.googleusercontent.com/d/${FILE_ID}=w1600`,
+        // 2) thumbnail 也很常可用
+        `https://drive.google.com/thumbnail?id=${FILE_ID}&sz=w1600`,
+        // 3) uc 下載直連（有時候會觸發下載/重導）
+        `https://drive.google.com/uc?export=download&id=${FILE_ID}`
+      ];
+
+      const img = document.getElementById("bannerImg");
+      if (!img) return;
+
+      let idx = 0;
+      const tryNext = () => {
+        if (idx >= sources.length) return; // 全掛就算了（至少不會無限迴圈）
+        img.src = sources[idx++];
+      };
+
+      img.onerror = tryNext;
+      tryNext();
     })();
 
     // ✅ 語言選擇：選一次 -> 隱藏選單 -> 顯示登入（iframe）
@@ -316,7 +323,6 @@
       const enter = (lang) => {
         if (!gate || !frameWrap || !frame) return;
 
-        // 先顯示 iframe（避免某些瀏覽器切 src 造成閃爍）
         frameWrap.style.display = "block";
 
         if (lang === "en") {
@@ -331,7 +337,6 @@
           document.title = "Wind Tycoon 風能大亨";
         }
 
-        // 隱藏語言頁
         gate.style.display = "none";
       };
 
